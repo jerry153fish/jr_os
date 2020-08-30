@@ -90,7 +90,25 @@ impl Writer {
         }
     }
 
-    fn new_line(&mut self) {/* TODO */}
+    fn new_line(&mut self) {
+
+        if self.row_position == BUFFER_HEIGHT - 1 {
+            for row in 1..BUFFER_HEIGHT {
+                for col in 0..BUFFER_WIDTH {
+                    let character = self.buffer.chars[row][col].read();
+                    self.buffer.chars[row - 1][col].write(character);
+                }
+            }
+        }
+        else {
+            self.row_position = self.row_position + 1;
+        }
+
+        self.clear_row(BUFFER_HEIGHT - 1);
+        self.column_position = 0;
+    }
+
+    fn clear_row(&mut self, row: usize) {/* TODO */}
 }
 
 use core::fmt::Write;
@@ -110,6 +128,6 @@ pub fn print_something() {
     };
 
     writer.write_byte(b'H');
-    writer.write_string("ello! ");
+    writer.write_string("ello! \n");
     write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
 }
