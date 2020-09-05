@@ -9,6 +9,7 @@ extern crate rlibc;
 
 use core::panic::PanicInfo;
 
+pub mod gdt;
 pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
@@ -16,7 +17,9 @@ pub mod vga_buffer;
 pub fn init() {
     println!("Starting JR_OS....");
 
-    
+    println!("Init Global Description Table");
+    gdt::init();
+
     println!("Init Interrupt Table....");
     interrupts::init_idt();
 }
