@@ -13,6 +13,7 @@ pub mod gdt;
 pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
+pub mod keyboard;
 
 pub fn init() {
     println!("Starting JR_OS....");
@@ -22,6 +23,10 @@ pub fn init() {
 
     println!("Init Interrupt Table....");
     interrupts::init_idt();
+
+    println!("Init hardware interrupt");
+    unsafe { interrupts::PICS.lock().initialize() };
+    x86_64::instructions::interrupts::enable();
 }
 
 pub trait Testable {
@@ -51,7 +56,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuExitCode::Failed);
-    loop {}
+    hlt_loop();
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -70,13 +75,19 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
     }
 }
 
+pub fn hlt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
+}
+
 /// Entry point for `cargo xtest`
 #[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     init();
     test_main();
-    loop {}
+    hlt_loop();
 }
 
 #[cfg(test)]
