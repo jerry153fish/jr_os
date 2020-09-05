@@ -17,7 +17,7 @@ pub extern "C" fn _start() -> ! {
     }
 
     // uncomment line below to trigger a stack overflow
-    stack_overflow();
+    // stack_overflow();
 
     #[cfg(test)]
     test_main();
