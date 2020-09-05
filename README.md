@@ -1,6 +1,6 @@
 # Toy OS for learning rust 
 
-A Toy OS in rust
+A Toy OS in rust for learning purpose follow (https://os.phil-opp.com)[https://os.phil-opp.com/] as guide.
 
 # How to start
 
